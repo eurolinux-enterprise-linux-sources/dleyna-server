@@ -2,7 +2,7 @@
 
 Name:           dleyna-server
 Version:        0.5.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Service for interacting with Digital Media Servers
 
 License:        LGPLv2
@@ -79,6 +79,10 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
 
 
 %changelog
+* Wed Nov 01 2017 Debarshi Ray <rishi@fedoraproject.org> - 0.5.0-3
+- Bump version resolve conflict with z-stream
+Resolves: #1479486
+
 * Thu Oct 05 2017 Debarshi Ray <rishi@fedoraproject.org> - 0.5.0-2
 - Use arch-specific Requires on dleyna-connector-dbus
 Resolves: #1479486
