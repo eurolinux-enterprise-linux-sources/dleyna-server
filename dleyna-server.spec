@@ -2,7 +2,7 @@
 
 Name:           dleyna-server
 Version:        0.5.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Service for interacting with Digital Media Servers
 
 License:        LGPLv2
@@ -20,7 +20,7 @@ BuildRequires:  pkgconfig(gupnp-av-1.0) >= 0.11.5
 BuildRequires:  pkgconfig(gupnp-dlna-2.0) >= 0.9.4
 BuildRequires:  pkgconfig(libsoup-2.4) >= 2.28.2
 Requires:       dbus
-Requires:       dleyna-connector-dbus
+Requires:       dleyna-connector-dbus%{?_isa}
 
 # https://github.com/01org/dleyna-server/issues/145
 Patch0:         0001-Device-Fix-ChildCount-property-type.patch
@@ -79,6 +79,10 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
 
 
 %changelog
+* Thu Oct 05 2017 Debarshi Ray <rishi@fedoraproject.org> - 0.5.0-2
+- Use arch-specific Requires on dleyna-connector-dbus
+Resolves: #1479486
+
 * Fri Mar 03 2017 Debarshi Ray <rishi@fedoraproject.org> - 0.5.0-1
 - Update to 0.5.0
 Resolves: #1386847
