@@ -1,31 +1,33 @@
 %global api 1.0
-%global commit 3fcae066b44195c187b5611acfd511b9a87850d0
-%global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           dleyna-server
-Version:        0.4.0
+Version:        0.5.0
 Release:        1%{?dist}
 Summary:        Service for interacting with Digital Media Servers
 
 License:        LGPLv2
 URL:            https://01.org/dleyna/
-
-Source0:        https://github.com/01org/%{name}/archive/%{commit}/%{name}-%{version}-%{shortcommit}.tar.gz
+Source0:        https://01.org/dleyna/sites/default/files/downloads/%{name}-%{version}.tar.gz
 
 BuildRequires:  autoconf automake libtool
-BuildRequires:  dleyna-core-devel
-BuildRequires:  glib2-devel >= 2.28
-BuildRequires:  gssdp-devel >= 0.13.2
-BuildRequires:  gupnp-devel >= 0.20.3
-BuildRequires:  gupnp-av-devel >= 0.11.5
-BuildRequires:  gupnp-dlna-devel >= 0.9.4
-BuildRequires:  libsoup-devel
-BuildRequires:  pkgconfig
+BuildRequires:  pkgconfig(dleyna-core-1.0) >= 0.5.0
+BuildRequires:  pkgconfig(gio-2.0) >= 2.28
+BuildRequires:  pkgconfig(glib-2.0) >= 2.28
+BuildRequires:  pkgconfig(gobject-2.0) >= 2.28
+BuildRequires:  pkgconfig(gssdp-1.0) >= 0.13.2
+BuildRequires:  pkgconfig(gupnp-1.0) >= 0.20.3
+BuildRequires:  pkgconfig(gupnp-av-1.0) >= 0.11.5
+BuildRequires:  pkgconfig(gupnp-dlna-2.0) >= 0.9.4
+BuildRequires:  pkgconfig(libsoup-2.4) >= 2.28.2
 Requires:       dbus
 Requires:       dleyna-connector-dbus
 
 # https://github.com/01org/dleyna-server/issues/145
 Patch0:         0001-Device-Fix-ChildCount-property-type.patch
+# https://github.com/01org/dleyna-server/pull/151
+Patch1:         0001-Fix-possible-use-after-free-on-exit.patch
+# https://github.com/01org/dleyna-server/pull/159
+Patch2:         0001-Include-libgupnp-gupnp-context-manager.h.patch
 
 %description
 D-Bus service for clients to discover and manipulate DLNA Digital Media
@@ -33,8 +35,11 @@ Servers (DMSes).
 
 
 %prep
-%setup -qn %{name}-%{commit}
+%setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+
 
 %build
 autoreconf -fiv
@@ -45,11 +50,11 @@ autoreconf -fiv
 # Omit unused direct shared library dependencies.
 sed --in-place --expression 's! -shared ! -Wl,--as-needed\0!g' libtool
 
-make %{?_smp_mflags}
+%make_build
 
 
 %install
-make install INSTALL="%{__install} -p" DESTDIR=$RPM_BUILD_ROOT
+%make_install
 find $RPM_BUILD_ROOT -name '*.la' -delete -print
 
 # We don't need a -devel package because only the daemon is supposed to be
@@ -74,6 +79,10 @@ rm -rf $RPM_BUILD_ROOT/%{_libdir}/pkgconfig
 
 
 %changelog
+* Fri Mar 03 2017 Debarshi Ray <rishi@fedoraproject.org> - 0.5.0-1
+- Update to 0.5.0
+Resolves: #1386847
+
 * Tue Jun 02 2015 Debarshi Ray <rishi@fedoraproject.org> - 0.4.0-1
 - Initial RHEL import
 Resolves: #1219532

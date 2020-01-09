@@ -1,5 +1,3 @@
-libdleyna_serverincdir = $(includedir)/dleyna-1.0/libdleyna/server
-
 DLEYNA_SERVER_VERSION = 1:3:0
 
 AM_CFLAGS =	$(GLIB_CFLAGS)				\
@@ -10,13 +8,14 @@ AM_CFLAGS =	$(GLIB_CFLAGS)				\
 		$(GUPNPAV_CFLAGS)			\
 		$(GUPNPDLNA_CFLAGS)			\
 		$(SOUP_CFLAGS)				\
+		$(LIBXML_CFLAGS)			\
 		-include config.h
-
-ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 pkglib_LTLIBRARIES = libdleyna-server-1.0.la
 
-libdleyna_serverinc_HEADERS = 	control-point-server.h
+libdleyna_serverincdir = $(includedir)/dleyna-1.0/libdleyna/server
+
+libdleyna_serverinc_HEADERS = control-point-server.h
 
 libdleyna_server_1_0_la_LDFLAGS =	-version-info $(DLEYNA_SERVER_VERSION) \
 					-no-undefined
@@ -31,7 +30,8 @@ libdleyna_server_1_0_la_SOURCES =	$(libdleyna_serverinc_HEADERS)	\
 					search.c	 		\
 					sort.c		 		\
 					task.c		 		\
-					upnp.c
+					upnp.c				\
+					xml-util.c
 
 libdleyna_server_1_0_la_LIBADD =	$(GLIB_LIBS)		\
 					$(GIO_LIBS)		\
@@ -40,7 +40,8 @@ libdleyna_server_1_0_la_LIBADD =	$(GLIB_LIBS)		\
 					$(GUPNP_LIBS)		\
 					$(GUPNPAV_LIBS) 	\
 					$(GUPNPDLNA_LIBS) 	\
-					$(SOUP_LIBS)
+					$(SOUP_LIBS)		\
+					$(LIBXML_LIBS)
 
 MAINTAINERCLEANFILES =	Makefile.in		\
 			aclocal.m4		\
@@ -54,9 +55,6 @@ MAINTAINERCLEANFILES =	Makefile.in		\
 
 sysconf_DATA = dleyna-server-service.conf
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = dleyna-server-1.0.pc
-
 EXTRA_DIST = 	$(sysconf_DATA)			\
 		async.h				\
 		client.h			\
@@ -69,10 +67,11 @@ EXTRA_DIST = 	$(sysconf_DATA)			\
 		server.h			\
 		sort.h				\
 		task.h				\
-		upnp.h
+		upnp.h				\
+		xml-util.h
 
-CLEANFILES = $(pkgconfig_DATA) dleyna-server-service.conf
-DISTCLEANFILES = $(pkgconfig_DATA) dleyna-server-service.conf
+CLEANFILES = dleyna-server-service.conf
+DISTCLEANFILES = dleyna-server-service.conf
 
 maintainer-clean-local:
 	rm -rf build-aux

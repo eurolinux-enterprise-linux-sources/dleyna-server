@@ -1,7 +1,7 @@
 AC_PREREQ([2.66])
 
 AC_INIT([dleyna-server],
-	[0.4.0],
+	[0.5.0],
 	[https://github.com/01org/dleyna-server/issues/new],
 	,
 	[https://01.org/dleyna/])
@@ -43,6 +43,7 @@ PKG_CHECK_MODULES([GUPNP], [gupnp-1.0 >= 0.20.3])
 PKG_CHECK_MODULES([GUPNPAV], [gupnp-av-1.0 >= 0.11.5])
 PKG_CHECK_MODULES([GUPNPDLNA], [gupnp-dlna-2.0 >= 0.9.4])
 PKG_CHECK_MODULES([SOUP], [libsoup-2.4 >= 2.28.2])
+PKG_CHECK_MODULES([LIBXML], [libxml-2.0])
 
 # Checks for header files.
 AC_CHECK_HEADERS([stdlib.h string.h syslog.h])
@@ -83,7 +84,7 @@ AC_ARG_ENABLE(master-build,,
 		[master_build=no])
 
 AS_IF([test "x$master_build" = "xno"],
-      [PKG_CHECK_MODULES([DLEYNA_CORE], [dleyna-core-1.0 >= 0.4.0])],
+      [PKG_CHECK_MODULES([DLEYNA_CORE], [dleyna-core-1.0 >= 0.5.0])],
       [this_abs_top_srcdir=`cd "$srcdir" && pwd`;
        DLEYNA_CORE_CFLAGS="-I$this_abs_top_srcdir/../dleyna-core";
        DLEYNA_CORE_LIBS="-L$this_abs_top_srcdir/../dleyna-core/.libs -ldleyna-core-1.0"
@@ -226,7 +227,6 @@ AC_SUBST([with_log_type])
 
 AC_CONFIG_FILES([Makefile					\
 		 libdleyna/server/Makefile			\
-		 libdleyna/server/dleyna-server-1.0.pc		\
 		 libdleyna/server/dleyna-server-service.conf	\
 		 server/dleyna-server-service-1.0.pc		\
 		 server/Makefile				\
